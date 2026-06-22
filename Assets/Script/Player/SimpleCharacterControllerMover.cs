@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class SimpleCharacterControllerMover : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 4f;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 120f;
     [SerializeField] private float gravity = -9.81f;
 

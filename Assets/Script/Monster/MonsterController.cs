@@ -6,7 +6,7 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] private float detectDistance = 10f;
     [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private float stopDistance = 1.5f;
+    [SerializeField] private float stopDistance = 5f;
     [SerializeField] private float rotationSpeed = 5f;
 
     private void Start()
