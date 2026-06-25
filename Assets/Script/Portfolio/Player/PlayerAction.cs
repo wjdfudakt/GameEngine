@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float detectDistance = 20f;
-    [SerializeField] private float attackDistance = 5f;
+    [SerializeField] private float detectRange = 20f;
+    [SerializeField] private float attackRange = 5f;
 
     [SerializeField] private Transform currentTarget;
+
+    [SerializeField] private float attackCooldown = 1.5f;
+    private float lastAttackTime;
 
     private readonly List<Transform> detectedTargets = new();
 
@@ -20,31 +23,35 @@ public class PlayerAttack : MonoBehaviour
         if (currentTarget == null)
             return;
 
-        float distance = Vector3.Distance(
-            transform.position,
-            currentTarget.position);
+        float distance = Vector3.Distance(transform.position, currentTarget.position);
 
-        if (distance <= attackDistance)
+        if (distance <= attackRange)
         {
-            Debug.Log($"공격! : {currentTarget.name}");
+            TryAttack();
         }
+    }
+
+    private void TryAttack()
+    {
+        if (Time.time < lastAttackTime + attackCooldown)
+            return;
+
+        lastAttackTime = Time.time;
+
+        Debug.Log($"공격! : {currentTarget.name}");
     }
 
     private void FindTargets()
     {
-        GameObject[] monsters =
-            GameObject.FindGameObjectsWithTag("Monster");
+        GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
 
         foreach (GameObject monster in monsters)
         {
-            float distance = Vector3.Distance(
-                transform.position,
-                monster.transform.position);
+            float distance = Vector3.Distance(transform.position, monster.transform.position);
 
-            bool isDetected =
-                detectedTargets.Contains(monster.transform);
+            bool isDetected = detectedTargets.Contains(monster.transform);
 
-            if (distance <= detectDistance && !isDetected)
+            if (distance <= detectRange && !isDetected)
             {
                 detectedTargets.Add(monster.transform);
 
@@ -60,10 +67,9 @@ public class PlayerAttack : MonoBehaviour
                 }
             }
 
-            if (distance > detectDistance && isDetected)
+            if (distance > detectRange && isDetected)
             {
-                int removedIndex =
-                    detectedTargets.IndexOf(monster.transform);
+                int removedIndex = detectedTargets.IndexOf(monster.transform);
 
                 detectedTargets.Remove(monster.transform);
 
@@ -93,9 +99,10 @@ public class PlayerAttack : MonoBehaviour
         detectedTargets.RemoveAll(t => t == null);
     }
 
-    // E
     public void OnNextTarget(InputValue value)
     {
+        Debug.Log("Q 입력");
+
         if (!value.isPressed)
             return;
 
@@ -112,9 +119,10 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log($"다음 타겟 : {currentTarget.name}");
     }
 
-    // Q
     public void OnPreviousTarget(InputValue value)
     {
+        Debug.Log("E 입력");
+
         if (!value.isPressed)
             return;
 
@@ -134,13 +142,9 @@ public class PlayerAttack : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(
-            transform.position,
-            detectDistance);
+        Gizmos.DrawWireSphere(transform.position, detectRange);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(
-            transform.position,
-            attackDistance);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
