@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MonsterAction : MonoBehaviour
 {
@@ -9,8 +8,8 @@ public class MonsterAction : MonoBehaviour
 
     [SerializeField] private int damage = 5;
     [SerializeField] private float attackCooldown = 1f;
-        
-    [SerializeField] private Transform player;
+
+    [SerializeField] private Transform target;
     [SerializeField] private float attackTimer;
 
     private Health health;
@@ -30,17 +29,17 @@ public class MonsterAction : MonoBehaviour
 
         if (player != null)
         {
-            this.player = player.transform;
+            this.target = player.transform;
         }
     }
 
     private void Update()
     {
-        if (player == null)
+        if (target == null)
             return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
-        
+        float distance = Vector3.Distance(transform.position, target.position);
+
 
         attackTimer += Time.deltaTime;
 
@@ -48,7 +47,7 @@ public class MonsterAction : MonoBehaviour
         {
             if (distance > attackRange)
             {
-                Vector3 direction = (player.position - transform.position) .normalized;
+                Vector3 direction = (target.position - transform.position).normalized;
                 direction.y = 0f;
 
                 transform.position += direction * moveSpeed * Time.deltaTime;
@@ -70,7 +69,7 @@ public class MonsterAction : MonoBehaviour
 
         attackTimer = 0f;
 
-        Health playerHealth = player.GetComponent<Health>();
+        Health playerHealth = target.GetComponent<Health>();
 
         if (playerHealth != null)
         {
