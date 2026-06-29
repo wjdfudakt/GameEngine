@@ -12,6 +12,8 @@ public class MonsterAction : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private float attackTimer;
 
+    [SerializeField] private GameObject experiencePrefab;
+
     private Health health;
 
     private void Awake()
@@ -79,6 +81,13 @@ public class MonsterAction : MonoBehaviour
 
     private void OnDeath()
     {
+        if (experiencePrefab != null)
+        {
+            Instantiate(
+                experiencePrefab,
+                transform.position,
+                Quaternion.identity);
+        }
         Destroy(gameObject);
     }
 

@@ -12,8 +12,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float attackCooldown = 0.5f;
     [SerializeField] private int damage = 10;
+    [SerializeField] private int damagePerLevel = 2;
 
     [SerializeField] private Transform currentTarget;
+
+    [SerializeField] private Level level;
 
     public Transform CurrentTarget
     {
@@ -34,6 +37,16 @@ public class PlayerCombat : MonoBehaviour
 
     private readonly List<Transform> targets = new();
     private float attackTimer;
+
+    private void Awake()
+    {
+        level = GetComponent<Level>();
+
+        if (level != null)
+        {
+            level.OnLevelUp.AddListener(OnLevelUp);
+        }
+    }
 
     private void Update()
     {
@@ -147,6 +160,21 @@ public class PlayerCombat : MonoBehaviour
         {
             health.TakeDamage(damage);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (level != null)
+        {
+            level.OnLevelUp.RemoveListener(OnLevelUp);
+        }
+    }
+
+    private void OnLevelUp(int currentLevel)
+    {
+        damage += damagePerLevel;
+
+        Debug.Log($"레벨 {currentLevel} 달성! 공격력 : {damage}");
     }
 
     private void OnDrawGizmosSelected()

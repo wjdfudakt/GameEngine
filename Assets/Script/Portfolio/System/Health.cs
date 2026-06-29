@@ -5,6 +5,8 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private int maxHP = 100;
 
+    public UnityEvent<int, int> OnHealthChanged;
+
     public int CurrentHP { get; private set; }
     public int MaxHP => maxHP;
 
@@ -13,6 +15,8 @@ public class Health : MonoBehaviour
     private void Awake()
     {
         CurrentHP = maxHP;
+
+        OnHealthChanged?.Invoke(CurrentHP, MaxHP);
     }
 
     public void TakeDamage(int damage)
@@ -21,6 +25,8 @@ public class Health : MonoBehaviour
 
         if (CurrentHP < 0)
             CurrentHP = 0;
+
+        OnHealthChanged?.Invoke(CurrentHP, MaxHP);
 
         Debug.Log($"{name} HP : {CurrentHP}");
 
@@ -36,6 +42,8 @@ public class Health : MonoBehaviour
 
         if (CurrentHP > maxHP)
             CurrentHP = maxHP;
+
+        OnHealthChanged?.Invoke(CurrentHP, MaxHP);
     }
 
     private void Die()

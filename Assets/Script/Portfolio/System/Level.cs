@@ -9,6 +9,8 @@ public enum LevelType
 
 public class Level : MonoBehaviour
 {
+    public UnityEvent<int, int, int> OnExperienceChanged;
+
     [Header("Type")]
     [SerializeField] private LevelType levelType;
 
@@ -25,6 +27,14 @@ public class Level : MonoBehaviour
 
     public UnityEvent<int> OnLevelUp;
 
+    private void Awake()
+    {
+        OnExperienceChanged?.Invoke(
+            currentExp,
+            requiredExp,
+            level);
+    }
+
     public void AddExperience(int amount)
     {
         if (levelType != LevelType.Player)
@@ -39,6 +49,11 @@ public class Level : MonoBehaviour
             currentExp -= requiredExp;
             LevelUp();
         }
+
+        OnExperienceChanged?.Invoke(
+        currentExp,
+        requiredExp,
+        level);
     }
 
     public void SetLevel(int value)
@@ -55,5 +70,10 @@ public class Level : MonoBehaviour
         Debug.Log($"{name} Level Up! Lv.{level}");
 
         OnLevelUp?.Invoke(level);
+
+        OnExperienceChanged?.Invoke(
+        currentExp,
+        requiredExp,
+        level);
     }
 }

@@ -5,7 +5,9 @@ public class MonsterSpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private GameObject monsterPrefab;
+
     [SerializeField] private float spawnCooldown = 2f;
+
     [SerializeField] private Transform spawnCenter;
     [SerializeField] private float spawnRadius = 5f;
 
@@ -34,7 +36,7 @@ public class MonsterSpawner : MonoBehaviour
             return;
 
         Vector2 randomOffset = Random.insideUnitCircle * spawnRadius;
-        Vector3 spawnPosition = transform.position + new Vector3(randomOffset.x, 2.5f, randomOffset.y);
+        Vector3 spawnPosition = transform.position + new Vector3(randomOffset.x, 2f, randomOffset.y);
 
         Instantiate(monsterPrefab, spawnPosition, Quaternion.identity);
     }
