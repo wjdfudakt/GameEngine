@@ -19,16 +19,25 @@ public class Level : MonoBehaviour
 
     [Header("Experience")]
     [SerializeField] private int currentExp;
-    [SerializeField] private int requiredExp = 10;
+    [SerializeField] private int requiredExp = 5;
+    [SerializeField] private float expMultiplier = 1.2f;
 
+    [SerializeField] private int hpIncreasePerLevel = 10;
+    
     public int CurrentLevel => level;
     public int CurrentExp => currentExp;
     public int RequiredExp => requiredExp;
+
+    private Health health;
+
+    public LevelType Type => levelType;
 
     public UnityEvent<int> OnLevelUp;
 
     private void Awake()
     {
+        health = GetComponent<Health>();
+
         OnExperienceChanged?.Invoke(
             currentExp,
             requiredExp,
@@ -65,7 +74,12 @@ public class Level : MonoBehaviour
     {
         level++;
 
-        requiredExp += 10;
+        requiredExp = Mathf.RoundToInt(requiredExp * expMultiplier);S
+
+        if (health != null)
+        {
+            health.IncreaseMaxHP(hpIncreasePerLevel);
+        }
 
         Debug.Log($"{name} Level Up! Lv.{level}");
 

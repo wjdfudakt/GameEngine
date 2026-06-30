@@ -8,10 +8,13 @@ public class Experience : MonoBehaviour
     {
         Level level = other.GetComponent<Level>();
 
-        if (level != null)
-        {
-            level.AddExperience(experience);
-            Destroy(gameObject);
-        }
+        if (level == null)
+            return;
+
+        if (level.Type != LevelType.Player)
+            return;
+        
+        level.AddExperience(experience);
+        Destroy(gameObject);        
     }
 }

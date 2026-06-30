@@ -18,6 +18,8 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private Level level;
 
+    private PlayerController controller;
+
     public Transform CurrentTarget
     {
         get => currentTarget;
@@ -41,6 +43,7 @@ public class PlayerCombat : MonoBehaviour
     private void Awake()
     {
         level = GetComponent<Level>();
+        controller = GetComponent<PlayerController>();
 
         if (level != null)
         {
@@ -141,6 +144,9 @@ public class PlayerCombat : MonoBehaviour
 
     private void AutoAttack()
     {
+        if (controller != null && controller.IsMoving)
+            return;
+
         if (CurrentTarget == null)
             return;
 

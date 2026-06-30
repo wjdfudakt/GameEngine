@@ -1441,7 +1441,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 140, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4554,7 +4554,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1511998875}
-  m_Father: {fileID: 1335052391}
+  m_Father: {fileID: 1077057635}
   m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!114 &976111972
 MonoBehaviour:
@@ -5153,6 +5153,7 @@ Transform:
   - {fileID: 1033419429}
   - {fileID: 401088525}
   - {fileID: 765046689}
+  - {fileID: 976111970}
   m_Father: {fileID: 1335052391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1077057636
@@ -5187,6 +5188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  rotateSpeed: 120
 --- !u!114 &1077057639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5307,7 +5309,9 @@ MonoBehaviour:
   levelType: 0
   level: 1
   currentExp: 0
-  requiredExp: 10
+  requiredExp: 5
+  expMultiplier: 1.2
+  hpIncreasePerLevel: 10
   OnLevelUp:
     m_PersistentCalls:
       m_Calls: []
@@ -6670,7 +6674,6 @@ Transform:
   m_Children:
   - {fileID: 239571646}
   - {fileID: 1077057635}
-  - {fileID: 976111970}
   - {fileID: 1229713860}
   - {fileID: 668085559}
   - {fileID: 1321064617}
