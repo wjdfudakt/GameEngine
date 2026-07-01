@@ -1,18 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum LevelType
-{
-    Player,
-    Monster
-}
-
-public class Level : MonoBehaviour
+public class PlayerStat : MonoBehaviour
 {
     public UnityEvent<int, int, int> OnExperienceChanged;
-
-    [Header("Type")]
-    [SerializeField] private LevelType levelType;
+    public UnityEvent<int> OnLevelUp;
 
     [Header("Level")]
     [SerializeField] private int level = 1;
@@ -22,17 +14,17 @@ public class Level : MonoBehaviour
     [SerializeField] private int requiredExp = 5;
     [SerializeField] private float expMultiplier = 1.2f;
 
+    [Header("Stats")]
+    [SerializeField] private int attackPower = 10;
+    [SerializeField] private int attackIncreasePerLevel = 2;
     [SerializeField] private int hpIncreasePerLevel = 10;
-    
+
     public int CurrentLevel => level;
     public int CurrentExp => currentExp;
     public int RequiredExp => requiredExp;
+    public int AttackPower => attackPower;
 
     private Health health;
-
-    public LevelType Type => levelType;
-
-    public UnityEvent<int> OnLevelUp;
 
     private void Awake()
     {
@@ -46,9 +38,6 @@ public class Level : MonoBehaviour
 
     public void AddExperience(int amount)
     {
-        if (levelType != LevelType.Player)
-            return;
-
         currentExp += amount;
 
         Debug.Log($"{name} EXP : {currentExp}/{requiredExp}");
@@ -60,34 +49,28 @@ public class Level : MonoBehaviour
         }
 
         OnExperienceChanged?.Invoke(
-        currentExp,
-        requiredExp,
-        level);
-    }
-
-    public void SetLevel(int value)
-    {
-        level = Mathf.Max(1, value);
+            currentExp,
+            requiredExp,
+            level);
     }
 
     private void LevelUp()
     {
         level++;
 
-        requiredExp = Mathf.RoundToInt(requiredExp * expMultiplier);S
+        requiredExp = Mathf.RoundToInt(requiredExp * expMultiplier);
 
-        if (health != null)
-        {
-            health.IncreaseMaxHP(hpIncreasePerLevel);
-        }
+        attackPower += attackIncreasePerLevel;
+
+        health?.IncreaseMaxHP(hpIncreasePerLevel);
 
         Debug.Log($"{name} Level Up! Lv.{level}");
 
         OnLevelUp?.Invoke(level);
 
         OnExperienceChanged?.Invoke(
-        currentExp,
-        requiredExp,
-        level);
+            currentExp,
+            requiredExp,
+            level);
     }
 }

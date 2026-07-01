@@ -16,7 +16,7 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private Transform currentTarget;
 
-    [SerializeField] private Level level;
+    [SerializeField] private PlayerStat level;
 
     private PlayerController controller;
 
@@ -42,7 +42,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Awake()
     {
-        level = GetComponent<Level>();
+        level = GetComponent<PlayerStat>();
         controller = GetComponent<PlayerController>();
 
         if (level != null)

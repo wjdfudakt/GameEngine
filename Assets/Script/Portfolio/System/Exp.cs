@@ -6,15 +6,15 @@ public class Experience : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Level level = other.GetComponent<Level>();
-
-        if (level == null)
+        if (!other.CompareTag("Player"))
             return;
 
-        if (level.Type != LevelType.Player)
+        PlayerStat playerStat = other.GetComponent<PlayerStat>();
+
+        if (playerStat == null)
             return;
-        
-        level.AddExperience(experience);
+                        
+        playerStat.AddExperience(experience);
         Destroy(gameObject);        
     }
 }
