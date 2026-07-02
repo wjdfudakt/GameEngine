@@ -15,12 +15,13 @@ public class MonsterStat : MonoBehaviour
     [SerializeField] private MonsterGrade grade = MonsterGrade.Normal;
 
     [Header("Grade Multiplier")]
+    [Header("Normal")]
     [SerializeField] private float normalAttackMultiplier = 1f;
     [SerializeField] private float normalHpMultiplier = 1f;
-
+    [Header("Elite")]
     [SerializeField] private float eliteAttackMultiplier = 1.5f;
     [SerializeField] private float eliteHpMultiplier = 2f;
-
+    [Header("Boss")]
     [SerializeField] private float bossAttackMultiplier = 3f;
     [SerializeField] private float bossHpMultiplier = 5f;
 
@@ -32,14 +33,10 @@ public class MonsterStat : MonoBehaviour
     [SerializeField] private int attackIncreasePerLevel = 1;
     [SerializeField] private int hpIncreasePerLevel = 5;
 
-    [Header("Auto Level Up")]
-    [SerializeField] private float levelUpInterval = 60f;
-
     public int CurrentLevel => level;
     public int AttackPower => attackPower;
     public MonsterGrade Grade => grade;
 
-    private float timer;
     private Health health;
 
     private void Awake()
@@ -49,13 +46,12 @@ public class MonsterStat : MonoBehaviour
         ApplyGradeMultiplier();
     }
 
-    private void Update()
+    private void Start()
     {
-        timer += Time.deltaTime;
+        int targetLevel = MonsterLevelManager.Instance.CurrentMonsterLevel;
 
-        if (timer >= levelUpInterval)
+        while (level < targetLevel)
         {
-            timer = 0f;
             LevelUp();
         }
     }

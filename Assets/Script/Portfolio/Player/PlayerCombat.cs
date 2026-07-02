@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
-using Unity.Collections;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
@@ -8,15 +6,17 @@ public class PlayerCombat : MonoBehaviour
     [Header("Target")]
     [SerializeField] private float detectRange = 10f;
 
-    [Header("Attack")]
-    [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float attackCooldown = 0.5f;
-    [SerializeField] private int damage = 10;
-    [SerializeField] private int damagePerLevel = 2;
-
     [SerializeField] private Transform currentTarget;
 
     [SerializeField] private PlayerStat level;
+
+    private PlayerClass playerClass;
+
+    private int damage => playerClass.AttackPower;
+
+    private float attackRange => playerClass.AttackRange;
+
+    private float attackCooldown => playerClass.AttackCooldown;
 
     private PlayerController controller;
 
@@ -44,6 +44,7 @@ public class PlayerCombat : MonoBehaviour
     {
         level = GetComponent<PlayerStat>();
         controller = GetComponent<PlayerController>();
+        playerClass = GetComponent<PlayerClass>();
 
         if (level != null)
         {
@@ -144,7 +145,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void AutoAttack()
     {
-        if (controller != null && controller.IsMoving)
+        if (controller != null && (controller.IsMoving))
             return;
 
         if (CurrentTarget == null)
@@ -164,7 +165,7 @@ public class PlayerCombat : MonoBehaviour
 
         if (health != null)
         {
-            health.TakeDamage(damage);
+            health.TakeDamage(playerClass.AttackPower);
         }
     }
 
@@ -178,7 +179,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnLevelUp(int currentLevel)
     {
-        damage += damagePerLevel;
+        playerClass.LevelUp();
 
         Debug.Log($"레벨 {currentLevel} 달성! 공격력 : {damage}");
     }
