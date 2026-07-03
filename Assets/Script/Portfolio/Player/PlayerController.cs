@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
+        Debug.Log(moveInput);
+
         transform.Rotate(
         Vector3.up,
         lookInput * rotateSpeed * Time.deltaTime);
