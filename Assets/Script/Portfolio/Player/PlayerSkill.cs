@@ -9,21 +9,39 @@ public class PlayerSkill : MonoBehaviour
     [SerializeField] private float skill3Cooldown = 12f;
     [SerializeField] private float skill4Cooldown = 15f;
     [SerializeField] private float skill5Cooldown = 30f;
-    [SerializeField] private float skill6Cooldown = 90f;
+
+    [Header("Ultimate Skill")]
+    [SerializeField] private float ultimateGauge = 0f;
+    [SerializeField] private float maxUltimateGauge = 100f;
+
+    [SerializeField] private float skill1Gauge = 5f;
+    [SerializeField] private float skill2Gauge = 10f;
+    [SerializeField] private float skill3Gauge = 10f;
+    [SerializeField] private float skill4Gauge = 10f;
+    [SerializeField] private float skill5Gauge = 20f;
+
+    public float UltimateGauge => ultimateGauge;
+    public float UltimateGaugePercent => ultimateGauge / maxUltimateGauge;
+
+    public float MaxUltimateGauge => maxUltimateGauge;
 
     private float skill1Timer;
     private float skill2Timer;
     private float skill3Timer;
     private float skill4Timer;
     private float skill5Timer;
-    private float skill6Timer;
 
     public float Skill1Remain => Mathf.Max(0, skill1Cooldown - skill1Timer);
     public float Skill2Remain => Mathf.Max(0, skill2Cooldown - skill2Timer);
     public float Skill3Remain => Mathf.Max(0, skill3Cooldown - skill3Timer);
     public float Skill4Remain => Mathf.Max(0, skill4Cooldown - skill4Timer);
     public float Skill5Remain => Mathf.Max(0, skill5Cooldown - skill5Timer);
-    public float Skill6Remain => Mathf.Max(0, skill6Cooldown - skill6Timer);
+
+    public float Skill1Cooldown => skill1Cooldown;
+    public float Skill2Cooldown => skill2Cooldown;
+    public float Skill3Cooldown => skill3Cooldown;
+    public float Skill4Cooldown => skill4Cooldown;
+    public float Skill5Cooldown => skill5Cooldown;
 
     private void Update()
     {
@@ -32,8 +50,7 @@ public class PlayerSkill : MonoBehaviour
         skill3Timer += Time.deltaTime;
         skill4Timer += Time.deltaTime;
         skill5Timer += Time.deltaTime;
-        skill6Timer += Time.deltaTime;
-    }
+    }   
 
     public void OnSkill1(InputValue value)
     {
@@ -100,36 +117,54 @@ public class PlayerSkill : MonoBehaviour
         if (!value.isPressed)
             return;
 
-        if (skill6Timer < skill6Cooldown)
+        if (ultimateGauge < maxUltimateGauge)
             return;
 
-        skill6Timer = 0f;
+        ultimateGauge = 0f;
         Skill6();
+    }
+
+    private void AddUltimateGauge(float amount)
+    {
+        ultimateGauge += amount;
+
+        if (ultimateGauge > maxUltimateGauge)
+            ultimateGauge = maxUltimateGauge;
     }
 
     private void Skill1()
     {
         Debug.Log("Skill 1");
+
+        AddUltimateGauge(skill1Gauge);
     }
 
     private void Skill2()
     {
         Debug.Log("Skill 2");
+
+        AddUltimateGauge(skill2Gauge);
     }
 
     private void Skill3()
     {
         Debug.Log("Skill 3");
+
+        AddUltimateGauge(skill3Gauge);
     }
 
     private void Skill4()
     {
         Debug.Log("Skill 4");
+
+        AddUltimateGauge(skill4Gauge);
     }
 
     private void Skill5()
     {
         Debug.Log("Skill 5");
+
+        AddUltimateGauge(skill5Gauge);
     }
 
     private void Skill6()

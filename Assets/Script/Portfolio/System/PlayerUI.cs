@@ -22,6 +22,14 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private TMP_Text skill5Text;
     [SerializeField] private TMP_Text skill6Text;
 
+    [Header("Skill Mask")]
+    [SerializeField] private Image skill1Mask;
+    [SerializeField] private Image skill2Mask;
+    [SerializeField] private Image skill3Mask;
+    [SerializeField] private Image skill4Mask;
+    [SerializeField] private Image skill5Mask;
+    [SerializeField] private Image skill6Mask;
+
     private float surviveTime;
 
 
@@ -46,7 +54,7 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateHealthUI(int hp, int maxHp)
     {
-        hpText.text = $"HP : {maxHp} / {hp}";
+        hpText.text = $"HP : {hp} / {maxHp}";
     }
 
     private void UpdateLevelUI(int exp, int maxExp, int lv)
@@ -67,19 +75,71 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateSkillUI()
     {
-        UpdateSkillText(skill1Text, playerSkill.Skill1Remain);
-        UpdateSkillText(skill2Text, playerSkill.Skill2Remain);
-        UpdateSkillText(skill3Text, playerSkill.Skill3Remain);
-        UpdateSkillText(skill4Text, playerSkill.Skill4Remain);
-        UpdateSkillText(skill5Text, playerSkill.Skill5Remain);
-        UpdateSkillText(skill6Text, playerSkill.Skill6Remain);
+        UpdateSkill(
+            skill1Text,
+            skill1Mask,
+            playerSkill.Skill1Remain,
+            playerSkill.Skill1Cooldown);
+
+        UpdateSkill(
+            skill2Text,
+            skill2Mask,
+            playerSkill.Skill2Remain,
+            playerSkill.Skill2Cooldown);
+
+        UpdateSkill(
+            skill3Text,
+            skill3Mask,
+            playerSkill.Skill3Remain,
+            playerSkill.Skill3Cooldown);
+
+        UpdateSkill(
+            skill4Text,
+            skill4Mask,
+            playerSkill.Skill4Remain,
+            playerSkill.Skill4Cooldown);
+
+        UpdateSkill(
+            skill5Text,
+            skill5Mask,
+            playerSkill.Skill5Remain,
+            playerSkill.Skill5Cooldown);
+
+        UpdateUltimate();
     }
 
-    private void UpdateSkillText(TMP_Text text, float remain)
+    private void UpdateSkill(
+    TMP_Text text,
+    Image mask,
+    float remain,
+    float cooldown)
     {
-        if (remain <= 0)
-            text.text = "Ready";
+        if (remain <= 0f)
+        {
+            text.text = "";
+            mask.fillAmount = 0f;
+        }
         else
-            text.text = remain.ToString("0.0");
+        {
+            text.text = Mathf.Ceil(remain).ToString();
+
+            mask.fillAmount = remain / cooldown;
+        }
+    }
+
+    private void UpdateUltimate()
+    {
+        skill6Mask.fillAmount =
+            1f - playerSkill.UltimateGaugePercent;
+
+        if (playerSkill.UltimateGauge >= 100)
+        {
+            skill6Text.text = "READY";
+        }
+        else
+        {
+            skill6Text.text =
+                $"{Mathf.RoundToInt(playerSkill.UltimateGauge)}%";
+        }
     }
 }
