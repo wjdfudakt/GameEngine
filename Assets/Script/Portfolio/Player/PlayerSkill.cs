@@ -20,6 +20,9 @@ public class PlayerSkill : MonoBehaviour
     [SerializeField] private float skill4Gauge = 10f;
     [SerializeField] private float skill5Gauge = 20f;
 
+
+    [SerializeField] private WarriorSkill warriorSkill;
+
     public float UltimateGauge => ultimateGauge;
     public float UltimateGaugePercent => ultimateGauge / maxUltimateGauge;
 
@@ -43,6 +46,12 @@ public class PlayerSkill : MonoBehaviour
     public float Skill4Cooldown => skill4Cooldown;
     public float Skill5Cooldown => skill5Cooldown;
 
+    private void Awake()
+    {
+        if (warriorSkill == null)
+            warriorSkill = GetComponent<WarriorSkill>();
+    }
+
     private void Update()
     {
         skill1Timer += Time.deltaTime;
@@ -60,8 +69,11 @@ public class PlayerSkill : MonoBehaviour
         if (skill1Timer < skill1Cooldown)
             return;
 
-        skill1Timer = 0f;
-        Skill1();
+        if (warriorSkill.Skill1())
+        {
+            skill1Timer = 0f;
+            AddUltimateGauge(skill1Gauge);
+        }
     }
 
     public void OnSkill2(InputValue value)
@@ -134,35 +146,34 @@ public class PlayerSkill : MonoBehaviour
 
     private void Skill1()
     {
-        Debug.Log("Skill 1");
-
+        warriorSkill.Skill1();
         AddUltimateGauge(skill1Gauge);
     }
 
     private void Skill2()
     {
-        Debug.Log("Skill 2");
+        warriorSkill.Skill2();
 
         AddUltimateGauge(skill2Gauge);
     }
 
     private void Skill3()
     {
-        Debug.Log("Skill 3");
+        warriorSkill.Skill3();
 
         AddUltimateGauge(skill3Gauge);
     }
 
     private void Skill4()
     {
-        Debug.Log("Skill 4");
+        warriorSkill.Skill4();
 
         AddUltimateGauge(skill4Gauge);
     }
 
     private void Skill5()
     {
-        Debug.Log("Skill 5");
+        warriorSkill.Skill5();
 
         AddUltimateGauge(skill5Gauge);
     }

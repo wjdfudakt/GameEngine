@@ -33,6 +33,11 @@ public class MonsterStat : MonoBehaviour
     [SerializeField] private int attackIncreasePerLevel = 1;
     [SerializeField] private int hpIncreasePerLevel = 5;
 
+    [Header("Reward")]
+    [SerializeField] private int experienceReward = 1;
+
+    public int ExperienceReward => experienceReward;
+
     public int CurrentLevel => level;
     public int AttackPower => attackPower;
     public MonsterGrade Grade => grade;
@@ -60,22 +65,26 @@ public class MonsterStat : MonoBehaviour
     {
         float attackMultiplier = 1f;
         float hpMultiplier = 1f;
+        float expMultiplier = 1f;
 
         switch (grade)
         {
             case MonsterGrade.Normal:
                 attackMultiplier = normalAttackMultiplier;
                 hpMultiplier = normalHpMultiplier;
+                expMultiplier = 1f;
                 break;
 
             case MonsterGrade.Elite:
                 attackMultiplier = eliteAttackMultiplier;
                 hpMultiplier = eliteHpMultiplier;
+                expMultiplier = 3f;
                 break;
 
             case MonsterGrade.Boss:
                 attackMultiplier = bossAttackMultiplier;
                 hpMultiplier = bossHpMultiplier;
+                expMultiplier = 10f;
                 break;
         }
 
@@ -85,6 +94,9 @@ public class MonsterStat : MonoBehaviour
             health.MaxHP * (hpMultiplier - 1f));
 
         health.IncreaseMaxHP(increaseHP);
+
+        experienceReward =
+            Mathf.RoundToInt(experienceReward * expMultiplier);
     }
 
     private void LevelUp()

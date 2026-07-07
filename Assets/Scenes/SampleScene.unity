@@ -3544,6 +3544,7 @@ GameObject:
   - component: {fileID: 1077057636}
   - component: {fileID: 1077057645}
   - component: {fileID: 1077057646}
+  - component: {fileID: 1077057647}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3729,7 +3730,7 @@ MonoBehaviour:
   warrior:
     attackPower: 20
     attackIncreasePerLevel: 4
-    attackRange: 5
+    attackRange: 7
     attackCooldown: 0.9
   archer:
     attackPower: 12
@@ -3765,6 +3766,22 @@ MonoBehaviour:
   skill3Gauge: 10
   skill4Gauge: 10
   skill5Gauge: 20
+  warriorSkill: {fileID: 0}
+--- !u!114 &1077057647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077057634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7425ad71ffb04ed48976ba01db8d60dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combat: {fileID: 0}
+  playerClass: {fileID: 0}
+  skill1DamagePercent: 150
 --- !u!1 &1077751126
 GameObject:
   m_ObjectHideFlags: 0

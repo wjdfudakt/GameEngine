@@ -12,13 +12,17 @@ public class MonsterAction : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private float attackTimer;
 
-    [SerializeField] private GameObject experiencePrefab;
+    private PlayerStat playerStat;
 
     private Health health;
+
+    private MonsterStat monsterStat;
 
     private void Awake()
     {
         health = GetComponent<Health>();
+        monsterStat = GetComponent<MonsterStat>();
+
         if (health != null)
         {
             health.OnDeath.AddListener(OnDeath);
@@ -31,7 +35,9 @@ public class MonsterAction : MonoBehaviour
 
         if (player != null)
         {
-            this.target = player.transform;
+            target = player.transform;
+
+            playerStat = player.GetComponent<PlayerStat>();
         }
     }
 
@@ -81,13 +87,11 @@ public class MonsterAction : MonoBehaviour
 
     private void OnDeath()
     {
-        if (experiencePrefab != null)
+        if (playerStat != null)
         {
-            Instantiate(
-                experiencePrefab,
-                transform.position,
-                Quaternion.identity);
+            playerStat.AddExperience(monsterStat.ExperienceReward);
         }
+
         Destroy(gameObject);
     }
 
