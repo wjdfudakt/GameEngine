@@ -399,7 +399,7 @@ GameObject:
   - component: {fileID: 4118174264785911290}
   - component: {fileID: 492946075952863995}
   m_Layer: 0
-  m_Name: Monster
+  m_Name: Elite
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -414,8 +414,8 @@ Transform:
   m_GameObject: {fileID: 6304444158574059778}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 25}
-  m_LocalScale: {x: 2, y: 4, z: 2}
+  m_LocalPosition: {x: 0, y: 3, z: 25}
+  m_LocalScale: {x: 4, y: 6, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3346381104033354681}
@@ -534,14 +534,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58b87ad0b7e54f4885d0ff33e794428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectRange: 100
-  attackRange: 5
-  moveSpeed: 3
-  damage: 5
-  attackCooldown: 1
   target: {fileID: 0}
   attackTimer: 0
-  experiencePrefab: {fileID: 5121169012609966456, guid: 1c8e39d93b1f51f47944c10511eef23b, type: 3}
 --- !u!114 &4118174264785911290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,7 +570,7 @@ MonoBehaviour:
   OnLevelUp:
     m_PersistentCalls:
       m_Calls: []
-  grade: 0
+  grade: 1
   normalAttackMultiplier: 1
   normalHpMultiplier: 1
   eliteAttackMultiplier: 1.5
@@ -584,9 +578,14 @@ MonoBehaviour:
   bossAttackMultiplier: 3
   bossHpMultiplier: 5
   level: 1
-  attackPower: 5
   attackIncreasePerLevel: 1
   hpIncreasePerLevel: 5
+  detectRange: 100
+  attackRange: 7
+  moveSpeed: 3
+  attackPower: 5
+  attackCooldown: 1
+  experienceReward: 1
 --- !u!1 &6402873667736699126
 GameObject:
   m_ObjectHideFlags: 0

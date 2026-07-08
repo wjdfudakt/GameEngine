@@ -2,12 +2,6 @@ using UnityEngine;
 
 public class MonsterAction : MonoBehaviour
 {
-    [SerializeField] private float detectRange = 10f;
-    [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float moveSpeed = 3f;
-
-    [SerializeField] private int damage = 5;
-    [SerializeField] private float attackCooldown = 1f;
 
     [SerializeField] private Transform target;
     [SerializeField] private float attackTimer;
@@ -51,14 +45,14 @@ public class MonsterAction : MonoBehaviour
 
         attackTimer += Time.deltaTime;
 
-        if (distance <= detectRange)
+        if (distance <= monsterStat.DetectRange)
         {
-            if (distance > attackRange)
+            if (distance > monsterStat.AttackRange)
             {
                 Vector3 direction = (target.position - transform.position).normalized;
                 direction.y = 0f;
 
-                transform.position += direction * moveSpeed * Time.deltaTime;
+                transform.position += direction * monsterStat.MoveSpeed * Time.deltaTime;
 
                 transform.forward = direction;
             }
@@ -72,7 +66,7 @@ public class MonsterAction : MonoBehaviour
 
     private void Attack()
     {
-        if (attackTimer < attackCooldown)
+        if (attackTimer < monsterStat.AttackCooldown)
             return;
 
         attackTimer = 0f;
@@ -81,7 +75,18 @@ public class MonsterAction : MonoBehaviour
 
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(damage);
+            WarriorSkill warrior = target.GetComponent<WarriorSkill>();
+
+            if (warrior != null && warrior.IsGuarding)
+            {
+                if (Random.Range(0f, 100f) <= warrior.GuardChance)
+                {
+                    Debug.Log("가드 성공!");
+                    return;
+                }
+            }
+
+            playerHealth.TakeDamage(monsterStat.AttackPower);
         }
     }
 
@@ -93,14 +98,5 @@ public class MonsterAction : MonoBehaviour
         }
 
         Destroy(gameObject);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectRange);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-    }
+    }    
 }

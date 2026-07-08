@@ -11,6 +11,10 @@ public class MonsterStat : MonoBehaviour
 {
     public UnityEvent<int> OnLevelUp;
 
+    private float attackMultiplier = 1f;
+    private float hpMultiplier = 1f;
+    private float expMultiplier = 1f;
+
     [Header("Grade")]
     [SerializeField] private MonsterGrade grade = MonsterGrade.Normal;
 
@@ -27,11 +31,15 @@ public class MonsterStat : MonoBehaviour
 
     [Header("Level")]
     [SerializeField] private int level = 1;
-
-    [Header("Stats")]
-    [SerializeField] private int attackPower = 5;
     [SerializeField] private int attackIncreasePerLevel = 1;
     [SerializeField] private int hpIncreasePerLevel = 5;
+
+    [Header("Stats")]
+    [SerializeField] private float detectRange = 10f;
+    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private int attackPower = 5;
+    [SerializeField] private float attackCooldown = 1f;
 
     [Header("Reward")]
     [SerializeField] private int experienceReward = 1;
@@ -39,7 +47,13 @@ public class MonsterStat : MonoBehaviour
     public int ExperienceReward => experienceReward;
 
     public int CurrentLevel => level;
+
     public int AttackPower => attackPower;
+    public float AttackCooldown => attackCooldown;
+    public float MoveSpeed => moveSpeed;
+    public float DetectRange => detectRange;
+    public float AttackRange => attackRange;
+
     public MonsterGrade Grade => grade;
 
     private Health health;
@@ -63,10 +77,6 @@ public class MonsterStat : MonoBehaviour
 
     private void ApplyGradeMultiplier()
     {
-        float attackMultiplier = 1f;
-        float hpMultiplier = 1f;
-        float expMultiplier = 1f;
-
         switch (grade)
         {
             case MonsterGrade.Normal:
@@ -90,8 +100,8 @@ public class MonsterStat : MonoBehaviour
 
         attackPower = Mathf.RoundToInt(attackPower * attackMultiplier);
 
-        int increaseHP = Mathf.RoundToInt(
-            health.MaxHP * (hpMultiplier - 1f));
+        int increaseHP =
+            Mathf.RoundToInt(health.MaxHP * (hpMultiplier - 1f));
 
         health.IncreaseMaxHP(increaseHP);
 
@@ -103,12 +113,22 @@ public class MonsterStat : MonoBehaviour
     {
         level++;
 
-        attackPower += attackIncreasePerLevel;
+        attackPower += Mathf.RoundToInt(
+            attackIncreasePerLevel * attackMultiplier);
 
         health?.IncreaseMaxHP(hpIncreasePerLevel);
 
         Debug.Log($"{grade} {name} Level Up! Lv.{level}");
 
         OnLevelUp?.Invoke(level);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

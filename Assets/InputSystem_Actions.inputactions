@@ -158,6 +158,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "AutoMove",
+                    "type": "Button",
+                    "id": "6610f18e-b9ba-40ad-9907-29e33bae9055",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -598,6 +607,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Skill6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1b394e1-0eef-4e7f-825c-14d5a6c4d170",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AutoMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

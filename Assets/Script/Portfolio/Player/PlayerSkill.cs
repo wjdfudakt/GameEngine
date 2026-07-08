@@ -3,6 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerSkill : MonoBehaviour
 {
+    private PlayerController controller;
+
+    private bool waitingSkill1;
+
     [Header("Cooldown")]
     [SerializeField] private float skill1Cooldown = 5f;
     [SerializeField] private float skill2Cooldown = 10f;
@@ -13,19 +17,17 @@ public class PlayerSkill : MonoBehaviour
     [Header("Ultimate Skill")]
     [SerializeField] private float ultimateGauge = 0f;
     [SerializeField] private float maxUltimateGauge = 100f;
-
     [SerializeField] private float skill1Gauge = 5f;
     [SerializeField] private float skill2Gauge = 10f;
     [SerializeField] private float skill3Gauge = 10f;
     [SerializeField] private float skill4Gauge = 10f;
     [SerializeField] private float skill5Gauge = 20f;
 
-
+    [Header("Class Skill")]
     [SerializeField] private WarriorSkill warriorSkill;
 
     public float UltimateGauge => ultimateGauge;
     public float UltimateGaugePercent => ultimateGauge / maxUltimateGauge;
-
     public float MaxUltimateGauge => maxUltimateGauge;
 
     private float skill1Timer;
@@ -46,10 +48,21 @@ public class PlayerSkill : MonoBehaviour
     public float Skill4Cooldown => skill4Cooldown;
     public float Skill5Cooldown => skill5Cooldown;
 
+    private PlayerCombat combat;
+
     private void Awake()
     {
         if (warriorSkill == null)
             warriorSkill = GetComponent<WarriorSkill>();
+
+        controller = GetComponent<PlayerController>();
+        combat = GetComponent<PlayerCombat>();
+
+        skill1Timer = skill1Cooldown;
+        skill2Timer = skill2Cooldown;
+        skill3Timer = skill3Cooldown;
+        skill4Timer = skill4Cooldown;
+        skill5Timer = skill5Cooldown;
     }
 
     private void Update()
@@ -59,6 +72,9 @@ public class PlayerSkill : MonoBehaviour
         skill3Timer += Time.deltaTime;
         skill4Timer += Time.deltaTime;
         skill5Timer += Time.deltaTime;
+
+
+        CheckWaitingSkill1();
     }   
 
     public void OnSkill1(InputValue value)
@@ -73,7 +89,15 @@ public class PlayerSkill : MonoBehaviour
         {
             skill1Timer = 0f;
             AddUltimateGauge(skill1Gauge);
+            return;
         }
+
+        if (combat.CurrentTarget == null)
+            return;
+
+        controller.StartAutoMove();
+
+        waitingSkill1 = true;
     }
 
     public void OnSkill2(InputValue value)
@@ -144,10 +168,21 @@ public class PlayerSkill : MonoBehaviour
             ultimateGauge = maxUltimateGauge;
     }
 
-    private void Skill1()
+    private void CheckWaitingSkill1()
     {
-        warriorSkill.Skill1();
-        AddUltimateGauge(skill1Gauge);
+        if (!waitingSkill1)
+            return;
+
+        if (controller.IsAutoMoving)
+            return;
+
+        if (warriorSkill.Skill1())
+        {
+            skill1Timer = 0f;
+            AddUltimateGauge(skill1Gauge);
+        }
+
+        waitingSkill1 = false;
     }
 
     private void Skill2()
