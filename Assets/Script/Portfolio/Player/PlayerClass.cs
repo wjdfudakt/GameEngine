@@ -52,8 +52,6 @@ public class PlayerClass : MonoBehaviour
     public void LevelUp()
     {
         CurrentStat.attackPower += CurrentStat.attackIncreasePerLevel;
-
-        Debug.Log($"{playerClass} 공격력 증가 → {CurrentStat.attackPower}");
     }
 
     private void OnDrawGizmosSelected()

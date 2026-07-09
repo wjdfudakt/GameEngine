@@ -12,14 +12,14 @@ public class Health : MonoBehaviour
 
     public UnityEvent OnDeath;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         CurrentHP = maxHP;
 
         OnHealthChanged?.Invoke(CurrentHP, MaxHP);
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         CurrentHP -= damage;
 

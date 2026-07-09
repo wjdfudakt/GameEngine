@@ -58,6 +58,8 @@ public class PlayerSkill : MonoBehaviour
         controller = GetComponent<PlayerController>();
         combat = GetComponent<PlayerCombat>();
 
+        controller.OnAutoMoveArrived += OnAutoMoveArrived;
+
         skill1Timer = skill1Cooldown;
         skill2Timer = skill2Cooldown;
         skill3Timer = skill3Cooldown;
@@ -72,9 +74,6 @@ public class PlayerSkill : MonoBehaviour
         skill3Timer += Time.deltaTime;
         skill4Timer += Time.deltaTime;
         skill5Timer += Time.deltaTime;
-
-
-        CheckWaitingSkill1();
     }   
 
     public void OnSkill1(InputValue value)
@@ -95,9 +94,11 @@ public class PlayerSkill : MonoBehaviour
         if (combat.CurrentTarget == null)
             return;
 
-        controller.StartAutoMove();
-
         waitingSkill1 = true;
+
+        combat.BlockAutoAttack(true);
+
+        controller.StartAutoMove();
     }
 
     public void OnSkill2(InputValue value)
@@ -168,21 +169,19 @@ public class PlayerSkill : MonoBehaviour
             ultimateGauge = maxUltimateGauge;
     }
 
-    private void CheckWaitingSkill1()
+    private void OnAutoMoveArrived()
     {
         if (!waitingSkill1)
             return;
 
-        if (controller.IsAutoMoving)
-            return;
+        waitingSkill1 = false;
 
         if (warriorSkill.Skill1())
         {
             skill1Timer = 0f;
             AddUltimateGauge(skill1Gauge);
         }
-
-        waitingSkill1 = false;
+        combat.BlockAutoAttack(false);
     }
 
     private void Skill2()
@@ -216,5 +215,11 @@ public class PlayerSkill : MonoBehaviour
     private void Skill6()
     {
         Debug.Log("Ultimate Skill");
+    }
+
+    private void OnDestroy()
+    {
+        if (controller != null)
+            controller.OnAutoMoveArrived -= OnAutoMoveArrived;
     }
 }

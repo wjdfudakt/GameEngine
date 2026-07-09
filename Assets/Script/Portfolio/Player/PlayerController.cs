@@ -14,11 +14,14 @@ public class PlayerController : MonoBehaviour
     private float lookInput;
 
     private PlayerCombat combat;
+
     private bool autoMove;
 
     public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
         
     public bool IsAutoMoving => autoMove;
+
+    public System.Action OnAutoMoveArrived;
 
     private void Awake()
     {
@@ -63,8 +66,8 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         transform.Rotate(
-        Vector3.up,
-        lookInput * rotateSpeed * Time.deltaTime);
+            Vector3.up,
+            lookInput * rotateSpeed * Time.deltaTime);
 
         Vector3 move = Vector3.zero;
 
@@ -72,7 +75,7 @@ public class PlayerController : MonoBehaviour
         {
             if (combat.CurrentTarget == null)
             {
-                autoMove = false;
+                StopAutoMove();
             }
             else
             {
@@ -81,21 +84,10 @@ public class PlayerController : MonoBehaviour
 
                 direction.y = 0f;
 
-                float distance = direction.magnitude;
+                direction.Normalize();
 
-                PlayerClass playerClass = GetComponent<PlayerClass>();
-
-                if (distance <= playerClass.AttackRange)
-                {
-                    autoMove = false;
-                }
-                else
-                {
-                    direction.Normalize();
-
-                    transform.forward = direction;
-                    move = direction;
-                }
+                transform.forward = direction;
+                move = direction;
             }
         }
         else
@@ -105,7 +97,21 @@ public class PlayerController : MonoBehaviour
                 transform.right * moveInput.x;
         }
 
-        controller.Move(
-            move * moveSpeed * Time.deltaTime);
+        controller.Move(move * moveSpeed * Time.deltaTime);
+
+        if (autoMove && combat.CurrentTarget != null)
+        {
+            float distance = Vector3.Distance(
+                transform.position,
+                combat.CurrentTarget.position);
+
+            PlayerClass playerClass = GetComponent<PlayerClass>();
+
+            if (distance <= playerClass.AttackRange -0.1f)
+            {
+                StopAutoMove();
+                OnAutoMoveArrived?.Invoke();
+            }
+        }
     }
 }

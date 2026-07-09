@@ -10,6 +10,10 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private PlayerStat level;
 
+    private PlayerController controller;
+
+    private readonly List<Transform> targets = new();
+
     private PlayerClass playerClass;
 
     private int damage => playerClass.AttackPower;
@@ -18,7 +22,11 @@ public class PlayerCombat : MonoBehaviour
 
     private float attackCooldown => playerClass.AttackCooldown;
 
-    private PlayerController controller;
+    private float attackTimer;
+
+    private bool blockAutoAttack;
+
+    private PlayerBuff buff;
 
     public Transform CurrentTarget
     {
@@ -37,14 +45,17 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    private readonly List<Transform> targets = new();
-    private float attackTimer;
+    public void BlockAutoAttack(bool value)
+    {
+        blockAutoAttack = value;
+    }
 
     private void Awake()
     {
         level = GetComponent<PlayerStat>();
         controller = GetComponent<PlayerController>();
         playerClass = GetComponent<PlayerClass>();
+        buff = GetComponent<PlayerBuff>();
 
         if (level != null)
         {
@@ -145,6 +156,9 @@ public class PlayerCombat : MonoBehaviour
 
     private void AutoAttack()
     {
+        if (blockAutoAttack)
+            return;
+
         if (controller != null && (controller.IsMoving))
             return;
 
@@ -165,7 +179,11 @@ public class PlayerCombat : MonoBehaviour
 
         if (health != null)
         {
-            health.TakeDamage(playerClass.AttackPower);
+            int damage = Mathf.RoundToInt(
+                playerClass.AttackPower *
+                buff.DamageMultiplier);
+
+            health.TakeDamage(damage);
         }
     }
 

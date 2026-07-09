@@ -71,15 +71,15 @@ public class MonsterAction : MonoBehaviour
 
         attackTimer = 0f;
 
-        Health playerHealth = target.GetComponent<Health>();
+        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
 
         if (playerHealth != null)
         {
-            WarriorSkill warrior = target.GetComponent<WarriorSkill>();
+            PlayerBuff buff = target.GetComponent<PlayerBuff>();
 
-            if (warrior != null && warrior.IsGuarding)
+            if (buff != null && buff.IsGuarding)
             {
-                if (Random.Range(0f, 100f) <= warrior.GuardChance)
+                if (Random.Range(0f, 100f) <= buff.GuardChance)
                 {
                     Debug.Log("가드 성공!");
                     return;

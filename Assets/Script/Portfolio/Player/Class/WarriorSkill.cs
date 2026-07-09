@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class WarriorSkill : MonoBehaviour
 {
+    //
+    [SerializeField] private PlayerBuff buff;
+
     [Header("Reference")]
     [SerializeField] private PlayerCombat combat;
     [SerializeField] private PlayerClass playerClass;
@@ -16,16 +19,20 @@ public class WarriorSkill : MonoBehaviour
 
     [Header("Skill 3 - 방패 치기")]
     [SerializeField] private float skill3DamagePercent = 180f;
-    [SerializeField] private float knockbackDistance = 2f;
-    [SerializeField] private float guardDuration = 5f;
-    [SerializeField] private float guardChance = 30f;
+    [SerializeField] private float knockbackDistance = 10f;
+    [SerializeField] private float guardDuration = 10f;
+    [SerializeField] private float guardChance = 50f;
+    [SerializeField] private float guardDamageReduce = 25f;
 
+    [Header("Skill 4 - 찌르기")]
+    [SerializeField] private float skill4DamagePercent = 200f;
+    [SerializeField] private float skill4DashDistance = 5f;
+    [SerializeField] private float skill4DashRadius = 1f;
 
-    private bool isGuarding;
-    private float guardTimer;
-
-    public bool IsGuarding => isGuarding;
-    public float GuardChance => guardChance;
+    [Header("Skill 5 - 전장의 함성")]
+    [SerializeField] private float skill5Duration = 8f;
+    [SerializeField] private float attackBuff = 30f;
+    [SerializeField] private float damageReduction = 20f;
 
     private void Awake()
     {
@@ -34,20 +41,9 @@ public class WarriorSkill : MonoBehaviour
 
         if (playerClass == null)
             playerClass = GetComponent<PlayerClass>();
-    }
 
-    private void Update()
-    {
-        if (!isGuarding)
-            return;
-
-        guardTimer -= Time.deltaTime;
-
-        if (guardTimer <= 0f)
-        {
-            isGuarding = false;
-            Debug.Log("가드 종료");
-        }
+        if (buff == null)
+            buff = GetComponent<PlayerBuff>();
     }
 
     public bool Skill1()
@@ -132,8 +128,7 @@ public class WarriorSkill : MonoBehaviour
         if (distance > playerClass.AttackRange)
             return false;
 
-        Health health =
-            combat.CurrentTarget.GetComponent<Health>();
+        Health health = combat.CurrentTarget.GetComponent<Health>();
 
         if (health == null)
             return false;
@@ -148,44 +143,81 @@ public class WarriorSkill : MonoBehaviour
 
         combat.CurrentTarget.position += dir * knockbackDistance;
 
-        isGuarding = true;
-        guardTimer = guardDuration;
+        buff.StartGuard(
+        guardDuration,
+        guardChance,
+        guardDamageReduce);
 
         Debug.Log($"방패 치기! {damage} 데미지");
 
         return true;
     }
 
-    public void Skill4()
+    public bool Skill4()
     {
-        Debug.Log("전사 - 찌르기");
+        int damage = Mathf.RoundToInt(
+            playerClass.AttackPower *
+            (skill4DamagePercent / 100f));
+
+        Vector3 start = transform.position;
+        Vector3 end = start + transform.forward * skill4DashDistance;
+
+        Collider[] hits = Physics.OverlapCapsule(
+            start,
+            end,
+            skill4DashRadius);
+
+        bool hit = false;
+
+        foreach (Collider collider in hits)
+        {
+            if (!collider.CompareTag("Monster"))
+                continue;
+
+            Health health = collider.GetComponent<Health>();
+
+            if (health == null)
+                continue;
+
+            health.TakeDamage(damage);
+
+            hit = true;
+        }
+
+        CharacterController controller =
+            GetComponent<CharacterController>();
+
+        if (controller != null)
+        {
+            controller.Move(
+                transform.forward * skill4DashDistance);
+        }
+        else
+        {
+            transform.position +=
+                transform.forward * skill4DashDistance;
+        }
+
+        if (hit)
+        {
+            Debug.Log($"찌르기! {damage} 데미지");
+        }
+
+        return hit;
     }
 
     public void Skill5()
     {
-        Debug.Log("전사 - 전장의 함성");
+        buff.StartBattleCry(
+        skill5Duration,
+        attackBuff,
+        damageReduction);
+
+        Debug.Log("전장의 함성 발동");
     }
 
     public void Ultimate()
     {
         Debug.Log("전사 - 블레이드 임팩트");
     }
-
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = Color.red;
-
-    //    Matrix4x4 oldMatrix = Gizmos.matrix;
-
-    //    Gizmos.matrix = Matrix4x4.TRS(
-    //        transform.position,
-    //        transform.rotation,
-    //        Vector3.one);
-
-    //    Gizmos.DrawWireCube(
-    //        Vector3.forward * skill2ForwardOffset,
-    //        skill2BoxSize);
-
-    //    Gizmos.matrix = oldMatrix;
-    //}
 }
