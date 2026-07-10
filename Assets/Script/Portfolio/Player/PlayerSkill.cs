@@ -4,15 +4,17 @@ using UnityEngine.InputSystem;
 public class PlayerSkill : MonoBehaviour
 {
     private PlayerController controller;
+    private PlayerCombat combat;
+    private ClassSkill classSkill;
+    private PlayerClass playerClass;
+    public ClassSkill ClassSkill => classSkill;
 
     private bool waitingSkill1;
+    private bool waitingSkill2;
+    private bool waitingSkill3;
+    private bool waitingSkill4;
+    private bool waitingSkill5;
 
-    [Header("Cooldown")]
-    [SerializeField] private float skill1Cooldown = 5f;
-    [SerializeField] private float skill2Cooldown = 10f;
-    [SerializeField] private float skill3Cooldown = 12f;
-    [SerializeField] private float skill4Cooldown = 15f;
-    [SerializeField] private float skill5Cooldown = 30f;
 
     [Header("Ultimate Skill")]
     [SerializeField] private float ultimateGauge = 0f;
@@ -23,70 +25,35 @@ public class PlayerSkill : MonoBehaviour
     [SerializeField] private float skill4Gauge = 10f;
     [SerializeField] private float skill5Gauge = 20f;
 
-    [Header("Class Skill")]
-    [SerializeField] private WarriorSkill warriorSkill;
-
     public float UltimateGauge => ultimateGauge;
     public float UltimateGaugePercent => ultimateGauge / maxUltimateGauge;
     public float MaxUltimateGauge => maxUltimateGauge;
 
-    private float skill1Timer;
-    private float skill2Timer;
-    private float skill3Timer;
-    private float skill4Timer;
-    private float skill5Timer;
-
-    public float Skill1Remain => Mathf.Max(0, skill1Cooldown - skill1Timer);
-    public float Skill2Remain => Mathf.Max(0, skill2Cooldown - skill2Timer);
-    public float Skill3Remain => Mathf.Max(0, skill3Cooldown - skill3Timer);
-    public float Skill4Remain => Mathf.Max(0, skill4Cooldown - skill4Timer);
-    public float Skill5Remain => Mathf.Max(0, skill5Cooldown - skill5Timer);
-
-    public float Skill1Cooldown => skill1Cooldown;
-    public float Skill2Cooldown => skill2Cooldown;
-    public float Skill3Cooldown => skill3Cooldown;
-    public float Skill4Cooldown => skill4Cooldown;
-    public float Skill5Cooldown => skill5Cooldown;
-
-    private PlayerCombat combat;
-
     private void Awake()
     {
-        if (warriorSkill == null)
-            warriorSkill = GetComponent<WarriorSkill>();
-
         controller = GetComponent<PlayerController>();
         combat = GetComponent<PlayerCombat>();
+        playerClass = GetComponent<PlayerClass>();
+
+        classSkill = playerClass.ClassSkill;
+
+        Debug.Log(classSkill);
 
         controller.OnAutoMoveArrived += OnAutoMoveArrived;
-
-        skill1Timer = skill1Cooldown;
-        skill2Timer = skill2Cooldown;
-        skill3Timer = skill3Cooldown;
-        skill4Timer = skill4Cooldown;
-        skill5Timer = skill5Cooldown;
     }
 
-    private void Update()
-    {
-        skill1Timer += Time.deltaTime;
-        skill2Timer += Time.deltaTime;
-        skill3Timer += Time.deltaTime;
-        skill4Timer += Time.deltaTime;
-        skill5Timer += Time.deltaTime;
-    }   
 
     public void OnSkill1(InputValue value)
     {
         if (!value.isPressed)
             return;
 
-        if (skill1Timer < skill1Cooldown)
+        if (!classSkill.CanUseSkill1())
             return;
 
-        if (warriorSkill.Skill1())
+        if (classSkill.Skill1())
         {
-            skill1Timer = 0f;
+            classSkill.StartSkill1Cooldown();
             AddUltimateGauge(skill1Gauge);
             return;
         }
@@ -106,11 +73,24 @@ public class PlayerSkill : MonoBehaviour
         if (!value.isPressed)
             return;
 
-        if (skill2Timer < skill2Cooldown)
+        if (!classSkill.CanUseSkill2())
             return;
 
-        skill2Timer = 0f;
-        Skill2();
+        if (classSkill.Skill2())
+        {
+            classSkill.StartSkill2Cooldown();
+            AddUltimateGauge(skill2Gauge);
+            return;
+        }
+
+        if (combat.CurrentTarget == null)
+            return;
+
+        waitingSkill2 = true;
+
+        combat.BlockAutoAttack(true);
+
+        controller.StartAutoMove();
     }
 
     public void OnSkill3(InputValue value)
@@ -118,11 +98,24 @@ public class PlayerSkill : MonoBehaviour
         if (!value.isPressed)
             return;
 
-        if (skill3Timer < skill3Cooldown)
+        if (!classSkill.CanUseSkill3())
             return;
 
-        skill3Timer = 0f;
-        Skill3();
+        if (classSkill.Skill3())
+        {
+            classSkill.StartSkill3Cooldown();
+            AddUltimateGauge(skill3Gauge);
+            return;
+        }
+
+        if (combat.CurrentTarget == null)
+            return;
+
+        waitingSkill3 = true;
+
+        combat.BlockAutoAttack(true);
+
+        controller.StartAutoMove();
     }
 
     public void OnSkill4(InputValue value)
@@ -130,11 +123,24 @@ public class PlayerSkill : MonoBehaviour
         if (!value.isPressed)
             return;
 
-        if (skill4Timer < skill4Cooldown)
+        if (!classSkill.CanUseSkill4())
             return;
 
-        skill4Timer = 0f;
-        Skill4();
+        if (classSkill.Skill4())
+        {
+            classSkill.StartSkill4Cooldown();
+            AddUltimateGauge(skill4Gauge);
+            return;
+        }
+
+        if (combat.CurrentTarget == null)
+            return;
+
+        waitingSkill4 = true;
+
+        combat.BlockAutoAttack(true);
+
+        controller.StartAutoMove();
     }
 
     public void OnSkill5(InputValue value)
@@ -142,11 +148,24 @@ public class PlayerSkill : MonoBehaviour
         if (!value.isPressed)
             return;
 
-        if (skill5Timer < skill5Cooldown)
+        if (!classSkill.CanUseSkill5())
             return;
 
-        skill5Timer = 0f;
-        Skill5();
+        if (classSkill.Skill5())
+        {
+            classSkill.StartSkill5Cooldown();
+            AddUltimateGauge(skill5Gauge);
+            return;
+        }
+
+        if (combat.CurrentTarget == null)
+            return;
+
+        waitingSkill5 = true;
+
+        combat.BlockAutoAttack(true);
+
+        controller.StartAutoMove();
     }
 
     public void OnSkill6(InputValue value)
@@ -171,45 +190,58 @@ public class PlayerSkill : MonoBehaviour
 
     private void OnAutoMoveArrived()
     {
-        if (!waitingSkill1)
-            return;
-
-        waitingSkill1 = false;
-
-        if (warriorSkill.Skill1())
+        if (waitingSkill1)
         {
-            skill1Timer = 0f;
-            AddUltimateGauge(skill1Gauge);
+            waitingSkill1 = false;
+
+            if (classSkill.Skill1())
+            {
+                classSkill.StartSkill1Cooldown();
+                AddUltimateGauge(skill1Gauge);
+            }
         }
+        else if (waitingSkill2)
+        {
+            waitingSkill2 = false;
+
+            if (classSkill.Skill2())
+            {
+                classSkill.StartSkill2Cooldown();
+                AddUltimateGauge(skill2Gauge);
+            }
+        }
+        else if (waitingSkill3)
+        {
+            waitingSkill3 = false;
+
+            if (classSkill.Skill3())
+            {
+                classSkill.StartSkill3Cooldown();
+                AddUltimateGauge(skill3Gauge);
+            }
+        }
+        else if (waitingSkill4)
+        {
+            waitingSkill4 = false;
+
+            if (classSkill.Skill4())
+            {
+                classSkill.StartSkill4Cooldown();
+                AddUltimateGauge(skill4Gauge);
+            }
+        }
+        else if (waitingSkill5)
+        {
+            waitingSkill5 = false;
+
+            if (classSkill.Skill5())
+            {
+                classSkill.StartSkill5Cooldown();
+                AddUltimateGauge(skill5Gauge);
+            }
+        }
+
         combat.BlockAutoAttack(false);
-    }
-
-    private void Skill2()
-    {
-        warriorSkill.Skill2();
-
-        AddUltimateGauge(skill2Gauge);
-    }
-
-    private void Skill3()
-    {
-        warriorSkill.Skill3();
-
-        AddUltimateGauge(skill3Gauge);
-    }
-
-    private void Skill4()
-    {
-        warriorSkill.Skill4();
-
-        AddUltimateGauge(skill4Gauge);
-    }
-
-    private void Skill5()
-    {
-        warriorSkill.Skill5();
-
-        AddUltimateGauge(skill5Gauge);
     }
 
     private void Skill6()

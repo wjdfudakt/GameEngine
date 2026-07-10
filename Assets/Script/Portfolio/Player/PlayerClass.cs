@@ -21,7 +21,33 @@ public class PlayerClass : MonoBehaviour
     [Header("Mage")]
     [SerializeField] private ClassStat mage;
 
+    [Header("Class Skill")]
+    [SerializeField] private WarriorSkill warriorSkill;
+    //[SerializeField] private ArcherSkill archerSkill;
+    //[SerializeField] private MageSkill mageSkill;
+
     public PlayerClassType Class => playerClass;
+
+    public ClassSkill ClassSkill
+    {
+        get
+        {
+            switch (playerClass)
+            {
+                case PlayerClassType.Warrior:
+                    return warriorSkill;
+
+                //case PlayerClassType.Archer:
+                //    return archerSkill;
+
+                //case PlayerClassType.Mage:
+                //    return mageSkill;
+
+                default:
+                    return warriorSkill;
+            }
+        }
+    }
 
     private ClassStat CurrentStat
     {

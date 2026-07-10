@@ -1,9 +1,38 @@
 using UnityEngine;
 
-public class WarriorSkill : MonoBehaviour
+public class WarriorSkill : ClassSkill
 {
-    //
     [SerializeField] private PlayerBuff buff;
+
+    private float skill1Timer;
+    private float skill2Timer;
+    private float skill3Timer;
+    private float skill4Timer;
+    private float skill5Timer;
+
+    public override float Skill1Cooldown => skill1Cooldown;
+    public override float Skill2Cooldown => skill2Cooldown;
+    public override float Skill3Cooldown => skill3Cooldown;
+    public override float Skill4Cooldown => skill4Cooldown;
+    public override float Skill5Cooldown => skill5Cooldown;
+
+    public override float Skill1Remain => Mathf.Max(0f, skill1Cooldown - skill1Timer);
+    public override float Skill2Remain => Mathf.Max(0f, skill2Cooldown - skill2Timer);
+    public override float Skill3Remain => Mathf.Max(0f, skill3Cooldown - skill3Timer);
+    public override float Skill4Remain => Mathf.Max(0f, skill4Cooldown - skill4Timer);
+    public override float Skill5Remain => Mathf.Max(0f, skill5Cooldown - skill5Timer);
+
+    public override bool CanUseSkill1() => skill1Timer >= skill1Cooldown;
+    public override bool CanUseSkill2() => skill2Timer >= skill2Cooldown;
+    public override bool CanUseSkill3() => skill3Timer >= skill3Cooldown;
+    public override bool CanUseSkill4() => skill4Timer >= skill4Cooldown;
+    public override bool CanUseSkill5() => skill5Timer >= skill5Cooldown;
+
+    public override void StartSkill1Cooldown() => skill1Timer = 0f;
+    public override void StartSkill2Cooldown() => skill2Timer = 0f;
+    public override void StartSkill3Cooldown() => skill3Timer = 0f;
+    public override void StartSkill4Cooldown() => skill4Timer = 0f;
+    public override void StartSkill5Cooldown() => skill5Timer = 0f;
 
     [Header("Reference")]
     [SerializeField] private PlayerCombat combat;
@@ -11,11 +40,13 @@ public class WarriorSkill : MonoBehaviour
 
     [Header("Skill 1 - 연속베기")]
     [SerializeField] private float skill1DamagePercent = 150f;
+    [SerializeField] private float skill1Cooldown = 5f;
 
     [Header("Skill 2 - 블레이드 스매시")]
     [SerializeField] private float skill2DamagePercent = 250f;
     [SerializeField] private Vector3 skill2BoxSize = new Vector3(3f, 5f, 2f);
     [SerializeField] private float skill2ForwardOffset = 2f;
+    [SerializeField] private float skill2Cooldown = 12f;
 
     [Header("Skill 3 - 방패 치기")]
     [SerializeField] private float skill3DamagePercent = 180f;
@@ -23,16 +54,19 @@ public class WarriorSkill : MonoBehaviour
     [SerializeField] private float guardDuration = 10f;
     [SerializeField] private float guardChance = 50f;
     [SerializeField] private float guardDamageReduce = 25f;
+    [SerializeField] private float skill3Cooldown = 10f;
 
     [Header("Skill 4 - 찌르기")]
     [SerializeField] private float skill4DamagePercent = 200f;
     [SerializeField] private float skill4DashDistance = 5f;
     [SerializeField] private float skill4DashRadius = 1f;
+    [SerializeField] private float skill4Cooldown = 9f;
 
     [Header("Skill 5 - 전장의 함성")]
     [SerializeField] private float skill5Duration = 8f;
     [SerializeField] private float attackBuff = 30f;
     [SerializeField] private float damageReduction = 20f;
+    [SerializeField] private float skill5Cooldown = 15f;
 
     private void Awake()
     {
@@ -46,7 +80,24 @@ public class WarriorSkill : MonoBehaviour
             buff = GetComponent<PlayerBuff>();
     }
 
-    public bool Skill1()
+    private void Start()
+    {
+        skill1Timer = skill1Cooldown;
+        skill2Timer = skill2Cooldown;
+        skill3Timer = skill3Cooldown;
+        skill4Timer = skill4Cooldown;
+        skill5Timer = skill5Cooldown;
+    }
+    private void Update()
+    {
+        skill1Timer += Time.deltaTime;
+        skill2Timer += Time.deltaTime;
+        skill3Timer += Time.deltaTime;
+        skill4Timer += Time.deltaTime;
+        skill5Timer += Time.deltaTime;
+    }
+
+    public override bool Skill1()
     {
         if (combat.CurrentTarget == null)
             return false;
@@ -76,7 +127,7 @@ public class WarriorSkill : MonoBehaviour
         return true;
     }
 
-    public bool Skill2()
+    public override bool Skill2()
     {
         Vector3 center =
             transform.position +
@@ -116,7 +167,7 @@ public class WarriorSkill : MonoBehaviour
         return hit;
     }
 
-    public bool Skill3()
+    public override bool Skill3()
     {
         if (combat.CurrentTarget == null)
             return false;
@@ -153,8 +204,18 @@ public class WarriorSkill : MonoBehaviour
         return true;
     }
 
-    public bool Skill4()
+    public override bool Skill4()
     {
+        if (combat.CurrentTarget == null)
+            return false;
+
+        float distance = Vector3.Distance(
+            transform.position,
+            combat.CurrentTarget.position);
+
+        if (distance > playerClass.AttackRange)
+            return false;
+
         int damage = Mathf.RoundToInt(
             playerClass.AttackPower *
             (skill4DamagePercent / 100f));
@@ -189,31 +250,31 @@ public class WarriorSkill : MonoBehaviour
 
         if (controller != null)
         {
-            controller.Move(
-                transform.forward * skill4DashDistance);
+            controller.Move(transform.forward * skill4DashDistance);
         }
         else
         {
-            transform.position +=
-                transform.forward * skill4DashDistance;
+            transform.position += transform.forward * skill4DashDistance;
         }
 
-        if (hit)
-        {
-            Debug.Log($"찌르기! {damage} 데미지");
-        }
+        Debug.Log($"찌르기! {damage} 데미지");
 
-        return hit;
+        return true;
     }
 
-    public void Skill5()
+    public override bool Skill5()
     {
+        if (combat.CurrentTarget == null)
+            return false;
+
         buff.StartBattleCry(
-        skill5Duration,
-        attackBuff,
-        damageReduction);
+            skill5Duration,
+            attackBuff,
+            damageReduction);
 
         Debug.Log("전장의 함성 발동");
+
+        return true;
     }
 
     public void Ultimate()

@@ -78,32 +78,32 @@ public class PlayerUI : MonoBehaviour
         UpdateSkill(
             skill1Text,
             skill1Mask,
-            playerSkill.Skill1Remain,
-            playerSkill.Skill1Cooldown);
+            playerSkill.ClassSkill.Skill1Remain,
+            playerSkill.ClassSkill.Skill1Cooldown);
 
         UpdateSkill(
             skill2Text,
             skill2Mask,
-            playerSkill.Skill2Remain,
-            playerSkill.Skill2Cooldown);
+            playerSkill.ClassSkill.Skill2Remain,
+            playerSkill.ClassSkill.Skill2Cooldown);
 
         UpdateSkill(
             skill3Text,
             skill3Mask,
-            playerSkill.Skill3Remain,
-            playerSkill.Skill3Cooldown);
+            playerSkill.ClassSkill.Skill3Remain,
+            playerSkill.ClassSkill.Skill3Cooldown);
 
         UpdateSkill(
             skill4Text,
             skill4Mask,
-            playerSkill.Skill4Remain,
-            playerSkill.Skill4Cooldown);
+            playerSkill.ClassSkill.Skill4Remain,
+            playerSkill.ClassSkill.Skill4Cooldown);
 
         UpdateSkill(
             skill5Text,
             skill5Mask,
-            playerSkill.Skill5Remain,
-            playerSkill.Skill5Cooldown);
+            playerSkill.ClassSkill.Skill5Remain,
+            playerSkill.ClassSkill.Skill5Cooldown);
 
         UpdateUltimate();
     }

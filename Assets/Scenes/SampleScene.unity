@@ -3538,6 +3538,7 @@ MonoBehaviour:
     attackIncreasePerLevel: 5
     attackRange: 15
     attackCooldown: 1.6
+  warriorSkill: {fileID: 1077057647}
 --- !u!114 &1077057646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3550,11 +3551,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b7226b6d4372c4984882825011fb15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill1Cooldown: 6
-  skill2Cooldown: 10
-  skill3Cooldown: 10
-  skill4Cooldown: 10
-  skill5Cooldown: 30
   ultimateGauge: 0
   maxUltimateGauge: 100
   skill1Gauge: 5
@@ -3562,7 +3558,6 @@ MonoBehaviour:
   skill3Gauge: 10
   skill4Gauge: 10
   skill5Gauge: 20
-  warriorSkill: {fileID: 0}
 --- !u!114 &1077057647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3579,20 +3574,25 @@ MonoBehaviour:
   combat: {fileID: 1077057636}
   playerClass: {fileID: 1077057645}
   skill1DamagePercent: 150
+  skill1Cooldown: 5
   skill2DamagePercent: 250
   skill2BoxSize: {x: 10, y: 1, z: 7}
   skill2ForwardOffset: 3.5
+  skill2Cooldown: 12
   skill3DamagePercent: 180
   knockbackDistance: 5
   guardDuration: 10
   guardChance: 5
   guardDamageReduce: 25
+  skill3Cooldown: 10
   skill4DamagePercent: 200
-  skill4DashDistance: 5
+  skill4DashDistance: 10
   skill4DashRadius: 1
+  skill4Cooldown: 9
   skill5Duration: 10
   attackBuff: 30
   damageReduction: 20
+  skill5Cooldown: 15
 --- !u!114 &1077057648
 MonoBehaviour:
   m_ObjectHideFlags: 0
