@@ -28,6 +28,10 @@ public class PlayerCombat : MonoBehaviour
 
     private PlayerBuff buff;
 
+    private static readonly int AttackTriggerHash = Animator.StringToHash("Attack");
+
+    private Animator animator;
+
     public Transform CurrentTarget
     {
         get => currentTarget;
@@ -56,6 +60,7 @@ public class PlayerCombat : MonoBehaviour
         controller = GetComponent<PlayerController>();
         playerClass = GetComponent<PlayerClass>();
         buff = GetComponent<PlayerBuff>();
+        animator = GetComponentInChildren<Animator>();
 
         if (level != null)
         {
@@ -184,6 +189,11 @@ public class PlayerCombat : MonoBehaviour
                 buff.DamageMultiplier);
 
             health.TakeDamage(damage);
+
+            if (animator != null)
+            {
+                animator.SetTrigger(AttackTriggerHash);
+            }
         }
     }
 
