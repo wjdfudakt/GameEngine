@@ -4,22 +4,34 @@ using UnityEngine;
 public class SimpleAnimatorDriver : MonoBehaviour
 {
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int MoveXHash = Animator.StringToHash("MoveX");
+    private static readonly int MoveYHash = Animator.StringToHash("MoveY");
 
     private Animator animator;
-    private CharacterController characterController;
+    private PlayerController controller;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        characterController = GetComponentInParent<CharacterController>();
+        controller = GetComponentInParent<PlayerController>();
     }
 
     private void Update()
     {
-        Vector3 horizontalVelocity = characterController.velocity;
-        horizontalVelocity.y = 0f;
+        Vector3 move = controller.AnimatorMove;
 
-        float speed = horizontalVelocity.magnitude;
-        animator.SetFloat(SpeedHash, speed, 0.1f, Time.deltaTime);
+        animator.SetFloat(SpeedHash, move.sqrMagnitude);
+
+        animator.SetFloat(
+            MoveXHash,
+            move.x,
+            0.1f,
+            Time.deltaTime);
+
+        animator.SetFloat(
+            MoveYHash,
+            move.z,
+            0.1f,
+            Time.deltaTime);
     }
 }

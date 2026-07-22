@@ -28,8 +28,7 @@ public class PlayerCombat : MonoBehaviour
 
     private PlayerBuff buff;
 
-    private static readonly int AttackTriggerHash = Animator.StringToHash("Attack");
-
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
     private Animator animator;
 
     public Transform CurrentTarget
@@ -164,7 +163,7 @@ public class PlayerCombat : MonoBehaviour
         if (blockAutoAttack)
             return;
 
-        if (controller != null && (controller.IsMoving))
+        if (controller != null && (controller.IsMoving || controller.IsAutoMoving))
             return;
 
         if (CurrentTarget == null)
@@ -192,9 +191,9 @@ public class PlayerCombat : MonoBehaviour
 
             if (animator != null)
             {
-                animator.SetTrigger(AttackTriggerHash);
+                animator.SetTrigger(AttackHash);
             }
-        }
+        }        
     }
 
     private void OnDestroy()

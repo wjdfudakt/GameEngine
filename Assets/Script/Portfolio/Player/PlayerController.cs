@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 120f;
 
+    public Vector3 AnimatorMove { get; private set; }
+
     private CharacterController controller;
 
     private Vector2 moveInput;
@@ -80,7 +82,8 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Vector3 direction =
-                    combat.CurrentTarget.position - transform.position;
+                    combat.CurrentTarget.position - 
+                    transform.position;
 
                 direction.y = 0f;
 
@@ -98,6 +101,8 @@ public class PlayerController : MonoBehaviour
         }
 
         controller.Move(move * moveSpeed * Time.deltaTime);
+
+        AnimatorMove = transform.InverseTransformDirection(move);
 
         if (autoMove && combat.CurrentTarget != null)
         {
