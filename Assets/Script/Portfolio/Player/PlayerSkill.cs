@@ -15,6 +15,13 @@ public class PlayerSkill : MonoBehaviour
     private bool waitingSkill4;
     private bool waitingSkill5;
 
+    private static readonly int Skill1TriggerHash = Animator.StringToHash("Skill1");
+    private static readonly int Skill2TriggerHash = Animator.StringToHash("Skill2");
+    private static readonly int Skill3TriggerHash = Animator.StringToHash("Skill3");
+    private static readonly int Skill4TriggerHash = Animator.StringToHash("Skill4");
+    private static readonly int Skill5TriggerHash = Animator.StringToHash("Skill5");
+
+    private Animator animator;
 
     [Header("Ultimate Skill")]
     [SerializeField] private float ultimateGauge = 0f;
@@ -34,6 +41,7 @@ public class PlayerSkill : MonoBehaviour
         controller = GetComponent<PlayerController>();
         combat = GetComponent<PlayerCombat>();
         playerClass = GetComponent<PlayerClass>();
+        animator = GetComponentInChildren<Animator>();
 
         classSkill = playerClass.ClassSkill;
 
@@ -55,6 +63,7 @@ public class PlayerSkill : MonoBehaviour
         {
             classSkill.StartSkill1Cooldown();
             AddUltimateGauge(skill1Gauge);
+            animator.SetTrigger(Skill1TriggerHash);
             return;
         }
 
@@ -80,6 +89,7 @@ public class PlayerSkill : MonoBehaviour
         {
             classSkill.StartSkill2Cooldown();
             AddUltimateGauge(skill2Gauge);
+            animator.SetTrigger(Skill2TriggerHash);
             return;
         }
 
@@ -105,6 +115,7 @@ public class PlayerSkill : MonoBehaviour
         {
             classSkill.StartSkill3Cooldown();
             AddUltimateGauge(skill3Gauge);
+            animator.SetTrigger(Skill3TriggerHash);
             return;
         }
 
@@ -130,6 +141,7 @@ public class PlayerSkill : MonoBehaviour
         {
             classSkill.StartSkill4Cooldown();
             AddUltimateGauge(skill4Gauge);
+            animator.SetTrigger(Skill4TriggerHash);
             return;
         }
 
@@ -155,6 +167,7 @@ public class PlayerSkill : MonoBehaviour
         {
             classSkill.StartSkill5Cooldown();
             AddUltimateGauge(skill5Gauge);
+            animator.SetTrigger(Skill5TriggerHash);
             return;
         }
 
@@ -198,6 +211,7 @@ public class PlayerSkill : MonoBehaviour
             {
                 classSkill.StartSkill1Cooldown();
                 AddUltimateGauge(skill1Gauge);
+                animator.SetTrigger(Skill1TriggerHash);
             }
         }
         else if (waitingSkill2)
@@ -208,6 +222,7 @@ public class PlayerSkill : MonoBehaviour
             {
                 classSkill.StartSkill2Cooldown();
                 AddUltimateGauge(skill2Gauge);
+                animator.SetTrigger(Skill2TriggerHash);
             }
         }
         else if (waitingSkill3)
@@ -218,6 +233,7 @@ public class PlayerSkill : MonoBehaviour
             {
                 classSkill.StartSkill3Cooldown();
                 AddUltimateGauge(skill3Gauge);
+                animator.SetTrigger(Skill3TriggerHash);
             }
         }
         else if (waitingSkill4)
@@ -228,6 +244,7 @@ public class PlayerSkill : MonoBehaviour
             {
                 classSkill.StartSkill4Cooldown();
                 AddUltimateGauge(skill4Gauge);
+                animator.SetTrigger(Skill4TriggerHash);
             }
         }
         else if (waitingSkill5)
@@ -238,6 +255,7 @@ public class PlayerSkill : MonoBehaviour
             {
                 classSkill.StartSkill5Cooldown();
                 AddUltimateGauge(skill5Gauge);
+                animator.SetTrigger(Skill5TriggerHash);
             }
         }
 
