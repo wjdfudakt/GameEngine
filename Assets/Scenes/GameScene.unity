@@ -3359,6 +3359,8 @@ GameObject:
   - component: {fileID: 1077057645}
   - component: {fileID: 1077057646}
   - component: {fileID: 1077057647}
+  - component: {fileID: 1077057651}
+  - component: {fileID: 1077057650}
   - component: {fileID: 1077057648}
   m_Layer: 0
   m_Name: Player
@@ -3481,6 +3483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bb1094f221ce0d4a9e803502464c68f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverPanel: {fileID: 0}
 --- !u!114 &1077057644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3535,6 +3538,8 @@ MonoBehaviour:
     attackRange: 15
     attackCooldown: 1.6
   warriorSkill: {fileID: 1077057647}
+  archerSkill: {fileID: 1077057651}
+  mageSkill: {fileID: 1077057650}
 --- !u!114 &1077057646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3620,6 +3625,30 @@ MonoBehaviour:
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1077057650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077057634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e59decc0f9334e4fa026c788a7c2aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1077057651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077057634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0712f9507916eeb4a8e5de290065f211, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1077751126
 GameObject:
   m_ObjectHideFlags: 0
@@ -4910,8 +4939,8 @@ RectTransform:
   - {fileID: 665111098}
   - {fileID: 41280645}
   - {fileID: 1262556816}
-  - {fileID: 564769806}
   - {fileID: 472757372}
+  - {fileID: 564769806}
   m_Father: {fileID: 1684553228}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4948,10 +4977,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 800}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3

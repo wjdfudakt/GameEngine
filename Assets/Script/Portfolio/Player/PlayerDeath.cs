@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDeath : MonoBehaviour
 {
+    [Header("Game Over UI")]
+    [SerializeField] private GameObject gameOverPanel;
+
     private Health health;
 
     private void Awake()
@@ -20,7 +24,29 @@ public class PlayerDeath : MonoBehaviour
 
         gameObject.SetActive(false);
 
-        // 게임 오버 UI
-        // 재시작 메뉴
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
+
+        Time.timeScale = 0f;
+    }
+
+    public void OnClickRestart()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void OnClickToTitle()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("TitleScene");
+    }
+
+    private void OnDestroy()
+    {
+        if (health != null)
+            health.OnDeath.RemoveListener(OnDeath);
     }
 }

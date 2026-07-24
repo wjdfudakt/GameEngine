@@ -129,6 +129,16 @@ public class WarriorSkill : ClassSkill
 
     public override bool Skill2()
     {
+        if (combat.CurrentTarget == null)
+            return false;
+
+        float distance = Vector3.Distance(
+            transform.position,
+            combat.CurrentTarget.position);
+
+        if (distance > playerClass.AttackRange)
+            return false;
+
         Vector3 center =
             transform.position +
             transform.forward * skill2ForwardOffset;

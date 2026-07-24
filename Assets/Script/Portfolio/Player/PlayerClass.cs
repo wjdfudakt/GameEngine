@@ -23,10 +23,18 @@ public class PlayerClass : MonoBehaviour
 
     [Header("Class Skill")]
     [SerializeField] private WarriorSkill warriorSkill;
-    //[SerializeField] private ArcherSkill archerSkill;
-    //[SerializeField] private MageSkill mageSkill;
+    [SerializeField] private ArcherSkill archerSkill;
+    [SerializeField] private MageSkill mageSkill;
 
     public PlayerClassType Class => playerClass;
+
+    private void Awake()
+    {
+        if (GameManager.Instance != null)
+        {
+            playerClass = GameManager.Instance.SelectedClass;
+        }
+    }
 
     public ClassSkill ClassSkill
     {
